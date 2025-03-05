@@ -1,0 +1,97 @@
+## 242. 有效的字母异位词
+# 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的 字母异位词。
+# 字母异位词是通过重新排列不同单词或短语的字母而形成的单词或短语，并使用所有原字母一次
+~~最增加自信心的一集~~
+
+
+#因为被官方放到了排序里面了，所以直接使用排序也行
+
+排序做法：
+class Solution {
+public:
+    bool isAnagram(string s, string t) 
+    {
+        if (s.length() != t.length()) 
+        {
+        return false;
+        }
+
+    std::sort(s.begin(), s.end());
+    std::sort(t.begin(), t.end());
+
+
+    return s ==  t;
+    }
+};
+
+
+#但是这道题目用哈希更好
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) 
+    {
+        if (s.length() != t.length()) 
+        {
+        return false;
+        }
+
+        std::vector<int> countS(26, 0);
+        std::vector<int> countT(26, 0);
+
+
+        for (char c : s) 
+        {
+            countS[c - 'a']++;
+        }
+
+        for (char c : t) 
+        {
+            countT[c - 'a']++;
+        }
+
+        for (int i = 0; i < 26; i++) 
+        {
+            if (countS[i] != countT[i]) 
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+};
+
+
+#在这道题目中sort是通常为O(nlogn),但由于这道题英文字母数字是固定的26，所以在哈希中为O(1)
+
+
+##进阶: 如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？
+class Solution {
+public:
+    bool isAnagram(string s, string t) 
+    {
+        if (s.length() != t.length()) 
+        {
+            return false;
+        }
+
+        std::unordered_map<char, int> count;
+
+        for (char c : s) {
+            count[c]++;
+        }
+
+        for (char c : t) 
+        {
+            if (--count[c] < 0) 
+            {
+                return false;
+            }
+        }
+
+        return true;   
+    }
+};
+
+#感觉并没有多大的区别
