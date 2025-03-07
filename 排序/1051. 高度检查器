@@ -1,1 +1,71 @@
+1051. 高度检查器
+学校打算为全体学生拍一张年度纪念照。根据要求，学生需要按照 非递减 的高度顺序排成一行。
+排序后的高度情况用整数数组 expected 表示，其中 expected[i] 是预计排在这一行中第 i 位的学生的高度（下标从 0 开始）。
+给你一个整数数组 heights ，表示 当前学生站位 的高度情况。heights[i] 是这一行中第 i 位学生的高度（下标从 0 开始）。
+返回满足 heights[i] != expected[i] 的 下标数量。
+
+
+实际上这道题复制后排序，再对比即可
+
+class Solution {
+public:
+    int heightChecker(vector<int>& heights) 
+    {
+        std::vector<int> expected(heights);
+        std::sort(expected.begin(), expected.end());
+    
+        int count = 0;
+    
+        for (int i = 0; i < heights.size(); ++i) {
+            if (heights[i] != expected[i]) {
+                ++count;
+            }
+        }
+        
+        return count;        
+        }
+};
+
+但是这么简单？就是这么简单
+可是这样运行时间是3ms,而大部分都是<1ms的
+可这道题目其他都是无法优化的，所以我们对排序下手
+
+
+class Solution {
+public:
+    int heightChecker(vector<int>& heights) 
+    {
+        int max_height = *std::max_element(heights.begin(), heights.end());
+    
+        std::vector<int> count(max_height + 1, 0);
+
+        for (int height : heights) {
+            ++count[height];
+        }
+        
+        int mismatch_count = 0;
+        int current_height = 0;
+        
+
+        for (int i = 0; i < heights.size(); ++i) {
+
+            while (count[current_height] == 0) {
+                ++current_height;
+            }
+            
+
+            if (heights[i] != current_height) {
+                ++mismatch_count;
+            }
+            
+            --count[current_height];
+        }
+        
+        return mismatch_count;
+        }
+};
+
+
+
+
 
